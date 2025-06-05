@@ -130,7 +130,7 @@ fun IntroScreen() {
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "SaveMoneySlot logo",
                 modifier = Modifier
-                    .size(250.dp)
+                    .size(350.dp)
                     .align(Alignment.Center)
                     .alpha(logoAlpha.value)
                     .drawWithContent {
