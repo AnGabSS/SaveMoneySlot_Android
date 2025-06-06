@@ -1,3 +1,5 @@
+package com.tech.padawan.savemoneyslot.presentation
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseInCubic
 import androidx.compose.animation.core.EaseInOutQuad
@@ -30,7 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun IntroScreen() {
+fun IntroScreen(onAnimationFinished: () -> Unit) {
     val coinSize = 70.dp
 
     val configuration = LocalConfiguration.current
@@ -45,11 +47,10 @@ fun IntroScreen() {
     val coinScale = remember { Animatable(1f) }
     val coinAlpha = remember { Animatable(0f) }
 
-    // Estados para a animação da logo
     val logoAlpha = remember { Animatable(0f) }
     val logoRevealFraction = remember { Animatable(0f) }
 
-    LaunchedEffect(key1 = screenWidthDp) {
+    LaunchedEffect(key1 = true) {
         coinAlpha.animateTo(1f, animationSpec = tween(durationMillis = 200))
         launch {
             coinOffsetX.animateTo(
@@ -103,6 +104,9 @@ fun IntroScreen() {
                 easing = EaseOutCubic
             )
         )
+
+        delay(200L)
+        onAnimationFinished()
     }
 
     Box(
@@ -155,5 +159,5 @@ fun IntroScreen() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun IntroScreenPreview() {
-    IntroScreen()
+    IntroScreen(onAnimationFinished = {})
 }
