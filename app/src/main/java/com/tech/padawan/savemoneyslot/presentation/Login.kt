@@ -31,7 +31,7 @@ import com.tech.padawan.savemoneyslot.R
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
 
 @Composable
-fun LoginScreen() {
+fun Login() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Box(
@@ -71,7 +71,14 @@ fun LoginScreen() {
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.White.copy(alpha = 0.5f),
                         unfocusedContainerColor = Color.White.copy(alpha = 0.5f),
-                    )
+                    ),
+                    placeholder = {
+                        Text(
+                            text = "david@bowie.com.us",
+                            fontFamily = PixelifySans,
+                            color = Color.White
+                        )
+                    }
                 )
                 TextField(
                     value = password,
@@ -98,7 +105,8 @@ fun LoginScreen() {
                 ) {
                     Text(
                         text = "Start",
-                        fontFamily = PixelifySans
+                        fontFamily = PixelifySans,
+                        color = Color.White
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Image(
@@ -114,6 +122,6 @@ fun LoginScreen() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun LoginScreenPreview() {
-    LoginScreen()
+fun LoginPreview() {
+    Login()
 }

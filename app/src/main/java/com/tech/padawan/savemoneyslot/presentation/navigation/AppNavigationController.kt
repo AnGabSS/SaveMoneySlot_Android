@@ -1,7 +1,6 @@
 package com.tech.padawan.savemoneyslot.presentation.navigation
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,8 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.tech.padawan.savemoneyslot.presentation.IntroScreen
-import com.tech.padawan.savemoneyslot.presentation.LoginScreen
+import com.tech.padawan.savemoneyslot.presentation.Intro
+import com.tech.padawan.savemoneyslot.presentation.Login
 
 enum class Screen {
     Intro,
@@ -34,14 +33,14 @@ fun AppNavigationController() {
     ) { screen ->
         when (screen) {
             Screen.Intro -> {
-                IntroScreen(
+                Intro(
                     onAnimationFinished = {
                         currentScreen = Screen.Login
                     }
                 )
             }
             Screen.Login -> {
-                LoginScreen()
+                Login()
             }
         }
     }

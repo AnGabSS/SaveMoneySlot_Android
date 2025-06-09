@@ -32,8 +32,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun IntroScreen(onAnimationFinished: () -> Unit) {
-    val coinSize = 70.dp
+fun Intro(onAnimationFinished: () -> Unit) {
+    val coinSize = 40.dp
 
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
@@ -158,6 +158,6 @@ fun IntroScreen(onAnimationFinished: () -> Unit) {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun IntroScreenPreview() {
-    IntroScreen(onAnimationFinished = {})
+fun IntroPreview() {
+    Intro(onAnimationFinished = {})
 }
