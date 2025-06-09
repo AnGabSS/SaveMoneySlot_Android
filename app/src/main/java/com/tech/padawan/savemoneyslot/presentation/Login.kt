@@ -27,11 +27,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.tech.padawan.savemoneyslot.R
+import com.tech.padawan.savemoneyslot.presentation.navigation.Screen
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
 
 @Composable
-fun Login() {
+fun Login(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Box(
@@ -97,7 +100,7 @@ fun Login() {
                     )
                 )
                 Button(
-                    onClick = {},
+                    onClick = {navController.navigate(Screen.Home.route)} ,
                     shape = RoundedCornerShape(5.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White.copy(alpha = 0.5f)
@@ -123,5 +126,5 @@ fun Login() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LoginPreview() {
-    Login()
+    Login(rememberNavController())
 }

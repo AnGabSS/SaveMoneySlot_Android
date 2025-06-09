@@ -1,47 +1,51 @@
 package com.tech.padawan.savemoneyslot.presentation.navigation
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.tech.padawan.savemoneyslot.presentation.Home
 import com.tech.padawan.savemoneyslot.presentation.Intro
 import com.tech.padawan.savemoneyslot.presentation.Login
 
-enum class Screen {
-    Intro,
-    Login
+/**
+ * Para um padrão mais moderno e seguro, definimos as rotas em uma "sealed class".
+ * Isso evita erros de digitação nos nomes das rotas e as mantém organizadas.
+ */
+sealed class Screen(val route: String) {
+    object Intro : Screen("intro_screen")
+    object Login : Screen("login_screen")
+    object Home : Screen("home_screen")
 }
 
 @Composable
 fun AppNavigationController() {
-    var currentScreen by remember { mutableStateOf(Screen.Intro) }
+    val navController = rememberNavController()
 
-    AnimatedContent(
-        targetState = currentScreen,
-        transitionSpec = {
-            fadeIn(
-                animationSpec = tween(750)
-            ) togetherWith fadeOut(animationSpec = tween(750))
-        },
-        label = "Screen Crossfade"
-    ) { screen ->
-        when (screen) {
-            Screen.Intro -> {
-                Intro(
-                    onAnimationFinished = {
-                        currentScreen = Screen.Login
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Intro.route
+    ) {
+
+        composable(route = Screen.Intro.route) {
+            Intro(
+
+                onAnimationFinished = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Intro.route) {
+                            inclusive = true
+                        }
                     }
-                )
-            }
-            Screen.Login -> {
-                Login()
-            }
+                }
+            )
+        }
+
+        composable(route = Screen.Login.route) {
+            Login(navController = navController)
+        }
+
+        composable(route = Screen.Home.route) {
+            Home(navController = navController)
         }
     }
 }
