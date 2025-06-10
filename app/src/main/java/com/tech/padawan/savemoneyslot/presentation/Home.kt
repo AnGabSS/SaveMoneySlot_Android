@@ -1,6 +1,5 @@
 package com.tech.padawan.savemoneyslot.presentation
 
-import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.SolidColor
@@ -35,14 +36,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tech.padawan.savemoneyslot.presentation.components.GlowingDot
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
-import ir.ehsannarmani.compose_charts.LineChart
+import ir.ehsannarmani.compose_charts.ColumnChart
 import ir.ehsannarmani.compose_charts.PieChart
-import ir.ehsannarmani.compose_charts.models.AnimationMode
-import ir.ehsannarmani.compose_charts.models.DrawStyle
+import ir.ehsannarmani.compose_charts.models.BarProperties
+import ir.ehsannarmani.compose_charts.models.Bars
 import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
+import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.LabelProperties
-import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.Pie
+import kotlin.random.Random
 
 @Composable
 fun Home(navController: NavHostController) {
@@ -58,6 +60,32 @@ fun Home(navController: NavHostController) {
         )
     }
 
+    val linuxBrush = remember {
+        Brush.verticalGradient(
+            colors = listOf(Color(0xFFFFA500), Color.Yellow)
+        )
+    }
+    val months = remember {
+        listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    }
+    val dynamicData = remember {
+        months.map { monthName ->
+            val randomValue = Random.nextDouble(from = -100.0, until = 100.0)
+
+            Bars(
+                label = monthName,
+                values = listOf(
+                    Bars.Data(
+                        label = "Linux",
+                        value = randomValue,
+                        color = linuxBrush
+                    )
+                ),
+            )
+        }
+    }
+
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -71,30 +99,23 @@ fun Home(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize().padding(top = 60.dp)
         ) {
-            LineChart(
-                modifier = Modifier.size(250.dp),
-                data = remember {
-                    listOf(
-                        Line(
-                            label = "Windows",
-                            values = listOf(28.0, 41.0, 5.0, 10.0, 35.0),
-                            color = SolidColor(Color(0xFF23af92)),
-                            firstGradientFillColor = Color(0xFF2BC0A1).copy(alpha = .5f),
-                            secondGradientFillColor = Color.Transparent,
-                            strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
-                            gradientAnimationDelay = 1000,
-                            drawStyle = DrawStyle.Stroke(width = 2.dp),
-                        )
-                    )
-                },
-                animationMode = AnimationMode.Together(delayBuilder = {
-                    it * 500L
-                }),
+            ColumnChart(
+                modifier = Modifier.height(250.dp).fillMaxWidth().padding(start = 20.dp, end = 20.dp),
+                data = dynamicData,
+                barProperties = BarProperties(
+                    cornerRadius = Bars.Data.Radius.Rectangle(topRight = 6.dp, topLeft = 6.dp),
+                    spacing = 3.dp,
+                    thickness = 14.dp
+                ),
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                ),
                 indicatorProperties = HorizontalIndicatorProperties(
                     textStyle = TextStyle(
                         color = Color.White,
                         fontFamily = PixelifySans
-                        ),
+                    ),
                     padding = 16.dp
                 ),
                 labelProperties = LabelProperties(
@@ -102,11 +123,15 @@ fun Home(navController: NavHostController) {
                     textStyle = TextStyle(
                         color = Color.White,
                         fontFamily = PixelifySans
+                    )
                     ),
-
+                labelHelperProperties = LabelHelperProperties(
+                    enabled = true,
+                    textStyle = TextStyle(
+                        color = Color.White,
+                        fontFamily = PixelifySans
+                    )
                 )
-
-
             )
 
 
