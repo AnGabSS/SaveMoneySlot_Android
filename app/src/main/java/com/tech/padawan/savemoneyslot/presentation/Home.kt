@@ -2,18 +2,15 @@ package com.tech.padawan.savemoneyslot.presentation
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -24,20 +21,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.tech.padawan.savemoneyslot.presentation.components.GlowingDot
+import com.tech.padawan.savemoneyslot.getColorByTransactionType
+import com.tech.padawan.savemoneyslot.mocks.TransactionMock
+import com.tech.padawan.savemoneyslot.mocks.mockTreeTransactions
+import com.tech.padawan.savemoneyslot.presentation.components.Header
+import com.tech.padawan.savemoneyslot.presentation.components.PieChartCard
+import com.tech.padawan.savemoneyslot.presentation.components.TextWithBgColor
+import com.tech.padawan.savemoneyslot.presentation.components.TransactionListCard
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
 import ir.ehsannarmani.compose_charts.ColumnChart
-import ir.ehsannarmani.compose_charts.PieChart
 import ir.ehsannarmani.compose_charts.models.BarProperties
 import ir.ehsannarmani.compose_charts.models.Bars
 import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
@@ -48,6 +47,9 @@ import kotlin.random.Random
 
 @Composable
 fun Home(navController: NavHostController) {
+
+    val lastTransaction: List<TransactionMock> = mockTreeTransactions()
+
 
 
     var data by remember {
@@ -86,12 +88,15 @@ fun Home(navController: NavHostController) {
     }
 
 
+
+
     Box(
-        contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFF12323D))
     ) {
+
+        Header()
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -137,95 +142,30 @@ fun Home(navController: NavHostController) {
 
             Column (
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(30.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
                 modifier = Modifier
                     .fillMaxWidth()
             ){
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                TextWithBgColor(text = "Expenses per category")
+                PieChartCard(data)
+
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(30.dp),
+                modifier = Modifier
+                    .fillMaxWidth().padding(start = 20.dp, end = 20.dp)
+            ) {
+                TextWithBgColor(text = "Last Transactions", bgColor = Color.DarkGray)
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .background(color = Color.Red, shape = RoundedCornerShape(8.dp))
-                            .padding(4.dp)
-                    ){
-                        Text(
-                            text = "Expenses per category",
-                            color = Color.White,
-                            fontFamily = PixelifySans,
-                            style = TextStyle(
-                                shadow = Shadow(
-                                    color = Color.Black,
-                                    offset = Offset(x = 2f, y = 2f),
-                                    blurRadius = 1f
-                                )
-                            )
-                        )
+                    lastTransaction.forEach { transaction ->
+                        TransactionListCard(transaction.name, "R$ " + transaction.value, getColorByTransactionType(transaction.type))
                     }
                 }
-                Row(
-                    modifier = Modifier.background(color = Color(0XFF14141C), shape = RoundedCornerShape(4.dp))
-                ) {
-                    PieChart(
-                        modifier = Modifier.size(200.dp).padding(20.dp),
-                        data = data,
-                        onPieClick = {
-                            println("${it.label} Clicked")
-                            val pieIndex = data.indexOf(it)
-                            data = data.mapIndexed { mapIndex, pie -> pie.copy(selected = pieIndex == mapIndex) }
-                        },
-                        selectedScale = 1.1f,
-                        selectedPaddingDegree = 4f,
-                        scaleAnimEnterSpec = spring<Float>(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        ),
-                        colorAnimEnterSpec = tween(300),
-                        colorAnimExitSpec = tween(300),
-                        scaleAnimExitSpec = tween(300),
-                        spaceDegreeAnimExitSpec = tween(300),
-                        style = Pie.Style.Stroke(width = 40.dp)
-                    )
-                    Column(
-                        modifier = Modifier.padding(10.dp),
-                        verticalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            GlowingDot()
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Fixed Expenses",
-                                color = Color.White,
-                                fontFamily = PixelifySans,
-                            )
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            GlowingDot(glowColor = Color(0XFFFF928A))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Restaurant",
-                                color = Color.White,
-                                fontFamily = PixelifySans,
-                            )
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            GlowingDot(glowColor = Color(0XFF3CC3DF))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Car maintenance",
-                                color = Color.White,
-                                fontFamily = PixelifySans,
-                            )
-                        }
-                    }
-                }
+
             }
         }
     }
