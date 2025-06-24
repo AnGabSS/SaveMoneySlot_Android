@@ -96,8 +96,6 @@ fun Home(navController: NavHostController) {
             .background(color = Color(0xFF12323D))
     ) {
 
-        Header()
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(40.dp),
@@ -136,7 +134,10 @@ fun Home(navController: NavHostController) {
                         color = Color.White,
                         fontFamily = PixelifySans
                     )
-                )
+                ),
+                minValue = -100.0,
+                maxValue = 100.0
+
             )
 
 

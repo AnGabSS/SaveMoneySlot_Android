@@ -12,5 +12,6 @@ fun mockTreeTransactions(): List<TransactionMock> {
     return listOf(
         TransactionMock(name = "Game Pass", type = 1, value = 60),
         TransactionMock(name = "Salary", type = 2, value = 4000),
+        TransactionMock(name = "MSFT", type = 3, value = 200)
     )
 }

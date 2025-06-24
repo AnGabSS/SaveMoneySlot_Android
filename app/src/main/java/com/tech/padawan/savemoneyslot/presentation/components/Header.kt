@@ -2,6 +2,7 @@ package com.tech.padawan.savemoneyslot.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -27,17 +28,21 @@ import com.tech.padawan.savemoneyslot.R
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
 
 @Composable
-fun Header() {
-    Box(modifier = Modifier.drawBehind {
-        val strokeWidth = 1.dp.toPx()
-        val y = size.height - strokeWidth / 2
-        drawLine(
-            color = Color.White,
-            start = Offset(0f, y),
-            end = Offset(size.width, y),
-            strokeWidth = strokeWidth
-        )
-    }){
+fun Header(onMenuClick: () -> Unit) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .background(color = Color(0xFF12323D)) // O background foi movido para cá
+        .drawBehind {
+            val strokeWidth = 1.dp.toPx()
+            val y = size.height - strokeWidth / 2
+            drawLine(
+                color = Color.White,
+                start = Offset(0f, y),
+                end = Offset(size.width, y),
+                strokeWidth = strokeWidth
+            )
+        }
+    ){
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -45,7 +50,8 @@ fun Header() {
         ){
             Image(
                 painter = painterResource(id = R.drawable.baseline_menu_24),
-                contentDescription = "Hamburger Menu"
+                contentDescription = "Hamburger Menu",
+                modifier = Modifier.clickable { onMenuClick() }
             )
             Text(
                 text="Home",
@@ -58,17 +64,10 @@ fun Header() {
             )
         }
     }
-
 }
 
-@Preview( showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun HeaderPreview(){
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFF12323D))
-    ) {
-        Header()
-    }
+    Header(onMenuClick = {})
 }

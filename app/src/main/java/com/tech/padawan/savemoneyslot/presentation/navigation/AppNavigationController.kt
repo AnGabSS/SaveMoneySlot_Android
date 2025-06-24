@@ -1,5 +1,6 @@
 package com.tech.padawan.savemoneyslot.presentation.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -7,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tech.padawan.savemoneyslot.presentation.Home
 import com.tech.padawan.savemoneyslot.presentation.Intro
 import com.tech.padawan.savemoneyslot.presentation.Login
+import com.tech.padawan.savemoneyslot.presentation.components.SideNavMenu
 
 /**
  * Para um padrão mais moderno e seguro, definimos as rotas em uma "sealed class".
@@ -45,7 +47,9 @@ fun AppNavigationController() {
         }
 
         composable(route = Screen.Home.route) {
-            Home(navController = navController)
+            SideNavMenu {
+                Home(navController = navController)
+            }
         }
     }
 }
