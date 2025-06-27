@@ -3,6 +3,7 @@ package com.tech.padawan.savemoneyslot.presentation
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +27,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tech.padawan.savemoneyslot.getColorByTransactionType
@@ -87,6 +91,7 @@ fun Home(navController: NavHostController) {
         }
     }
 
+    val scrollState = rememberScrollState()
 
 
 
@@ -102,43 +107,54 @@ fun Home(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize().padding(top = 60.dp)
         ) {
-            ColumnChart(
-                modifier = Modifier.height(250.dp).fillMaxWidth().padding(start = 20.dp, end = 20.dp),
-                data = dynamicData,
-                barProperties = BarProperties(
-                    cornerRadius = Bars.Data.Radius.Rectangle(topRight = 6.dp, topLeft = 6.dp),
-                    spacing = 3.dp,
-                    thickness = 14.dp
-                ),
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
-                ),
-                indicatorProperties = HorizontalIndicatorProperties(
-                    textStyle = TextStyle(
-                        color = Color.White,
-                        fontFamily = PixelifySans
-                    ),
-                    padding = 16.dp
-                ),
-                labelProperties = LabelProperties(
-                    enabled = true,
-                    textStyle = TextStyle(
-                        color = Color.White,
-                        fontFamily = PixelifySans
-                    )
-                    ),
-                labelHelperProperties = LabelHelperProperties(
-                    enabled = true,
-                    textStyle = TextStyle(
-                        color = Color.White,
-                        fontFamily = PixelifySans
-                    )
-                ),
-                minValue = -100.0,
-                maxValue = 100.0
+            Box(
+                modifier = Modifier
+                .horizontalScroll(scrollState)
+            ){
+                val spacePerGroup = 48.dp
+                val totalWidth: Dp = remember(dynamicData) {
+                    spacePerGroup * dynamicData.size
+                }
 
-            )
+                // 2. Chamamos o ColumnChart original, mas agora com o Modifier.width()
+                ColumnChart(
+                    modifier = Modifier
+                        .height(250.dp)
+                        .width(totalWidth) // <-- APLICA A LARGURA FIXA AQUI
+                        .padding(horizontal = 16.dp),
+                    data = dynamicData,
+                    barProperties = BarProperties(
+                        cornerRadius = Bars.Data.Radius.Rectangle(topRight = 6.dp, topLeft = 6.dp),
+                        spacing = 3.dp,
+                        thickness = 14.dp
+                    ),
+                    indicatorProperties = HorizontalIndicatorProperties(
+                        textStyle = TextStyle(
+                            color = Color.White,
+                            fontFamily = PixelifySans,
+                            fontSize = 12.sp
+                        ),
+                        padding = 16.dp
+                    ),
+                    labelProperties = LabelProperties(
+                        enabled = true,
+                        textStyle = TextStyle(
+                            color = Color.White,
+                            fontFamily = PixelifySans,
+                            fontSize = 12.sp
+                        )
+                    ),
+                    labelHelperProperties = LabelHelperProperties(
+                        enabled = true,
+                        textStyle = TextStyle(
+                            color = Color.White,
+                            fontFamily = PixelifySans
+                        )
+                    ),
+                    minValue = -100.0,
+                    maxValue = 100.0
+                )
+            }
 
 
             Column (
