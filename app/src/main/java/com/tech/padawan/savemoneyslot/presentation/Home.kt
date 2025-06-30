@@ -1,21 +1,15 @@
 package com.tech.padawan.savemoneyslot.presentation
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,10 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.tech.padawan.savemoneyslot.getColorByTransactionType
-import com.tech.padawan.savemoneyslot.mocks.TransactionMock
-import com.tech.padawan.savemoneyslot.mocks.mockTreeTransactions
-import com.tech.padawan.savemoneyslot.presentation.components.Header
+import com.tech.padawan.savemoneyslot.data.transaction.model.SearchedTransaction
+import com.tech.padawan.savemoneyslot.mocks.mockTransactions
 import com.tech.padawan.savemoneyslot.presentation.components.PieChartCard
 import com.tech.padawan.savemoneyslot.presentation.components.TextWithBgColor
 import com.tech.padawan.savemoneyslot.presentation.components.TransactionListCard
@@ -52,7 +44,7 @@ import kotlin.random.Random
 @Composable
 fun Home(navController: NavHostController) {
 
-    val lastTransaction: List<TransactionMock> = mockTreeTransactions()
+    val lastTransaction: List<SearchedTransaction> = mockTransactions()
 
 
 
@@ -98,7 +90,6 @@ fun Home(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF12323D))
     ) {
 
         Column(
@@ -111,22 +102,21 @@ fun Home(navController: NavHostController) {
                 modifier = Modifier
                 .horizontalScroll(scrollState)
             ){
-                val spacePerGroup = 48.dp
+                val spacePerGroup = 42.dp
                 val totalWidth: Dp = remember(dynamicData) {
                     spacePerGroup * dynamicData.size
                 }
 
-                // 2. Chamamos o ColumnChart original, mas agora com o Modifier.width()
                 ColumnChart(
                     modifier = Modifier
                         .height(250.dp)
-                        .width(totalWidth) // <-- APLICA A LARGURA FIXA AQUI
+                        .width(totalWidth)
                         .padding(horizontal = 16.dp),
                     data = dynamicData,
                     barProperties = BarProperties(
                         cornerRadius = Bars.Data.Radius.Rectangle(topRight = 6.dp, topLeft = 6.dp),
-                        spacing = 3.dp,
-                        thickness = 14.dp
+                        spacing = 4.dp,
+                        thickness = 10.dp
                     ),
                     indicatorProperties = HorizontalIndicatorProperties(
                         textStyle = TextStyle(
@@ -141,8 +131,9 @@ fun Home(navController: NavHostController) {
                         textStyle = TextStyle(
                             color = Color.White,
                             fontFamily = PixelifySans,
-                            fontSize = 12.sp
-                        )
+                            fontSize = 10.sp
+                        ),
+                        padding = 4.dp
                     ),
                     labelHelperProperties = LabelHelperProperties(
                         enabled = true,
@@ -179,7 +170,7 @@ fun Home(navController: NavHostController) {
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     lastTransaction.forEach { transaction ->
-                        TransactionListCard(transaction.name, "R$ " + transaction.value, getColorByTransactionType(transaction.type))
+                        TransactionListCard(transaction)
                     }
                 }
 

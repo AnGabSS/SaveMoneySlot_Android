@@ -28,7 +28,10 @@ import com.tech.padawan.savemoneyslot.R
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
 
 @Composable
-fun Header(onMenuClick: () -> Unit) {
+fun Header(
+        screenName: String,
+        onMenuClick: () -> Unit
+) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .background(color = Color(0xFF12323D)) // O background foi movido para cá
@@ -54,7 +57,7 @@ fun Header(onMenuClick: () -> Unit) {
                 modifier = Modifier.clickable { onMenuClick() }
             )
             Text(
-                text="Home",
+                text=screenName,
                 color = Color.White,
                 fontFamily = PixelifySans,
             )
@@ -69,5 +72,5 @@ fun Header(onMenuClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun HeaderPreview(){
-    Header(onMenuClick = {})
+    Header("Home", onMenuClick = {})
 }

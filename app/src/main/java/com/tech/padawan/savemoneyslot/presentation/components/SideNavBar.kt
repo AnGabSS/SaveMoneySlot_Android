@@ -33,17 +33,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.tech.padawan.savemoneyslot.R
+import com.tech.padawan.savemoneyslot.presentation.navigation.Screen
 import com.tech.padawan.savemoneyslot.ui.theme.BlueBg
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SideNavMenu(
+    screenName: String,
+    navController: NavHostController,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -68,7 +73,7 @@ fun SideNavMenu(
                             )
                         } },
                         selected = false,
-                        onClick = { /* Handle click */ }
+                        onClick = { navController.navigate(Screen.Home.route) }
                     )
                     NavigationDrawerItem(
                         label = { Row(verticalAlignment = Alignment.CenterVertically) {
@@ -81,7 +86,7 @@ fun SideNavMenu(
                             )
                         } },
                         selected = false,
-                        onClick = { /* Handle click */ }
+                        onClick = { navController.navigate(Screen.Transactions.route) }
                     )
                     NavigationDrawerItem(
                         label = { Row (modifier = Modifier.padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically){
@@ -123,6 +128,7 @@ fun SideNavMenu(
         Scaffold (
             topBar = {
                 Header(
+                    screenName = screenName,
                     onMenuClick = {
                         scope.launch {
                             if (drawerState.isClosed) {

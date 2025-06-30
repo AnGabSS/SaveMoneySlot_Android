@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tech.padawan.savemoneyslot.R
+import com.tech.padawan.savemoneyslot.presentation.components.BackgroundForPreview
 import com.tech.padawan.savemoneyslot.presentation.navigation.Screen
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
 
@@ -39,10 +40,8 @@ fun Login(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
     Box(
         contentAlignment = Alignment.Center,
-
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF12323D))
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,5 +125,7 @@ fun Login(navController: NavHostController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LoginPreview() {
-    Login(rememberNavController())
+    BackgroundForPreview {
+        Login(rememberNavController())
+    }
 }

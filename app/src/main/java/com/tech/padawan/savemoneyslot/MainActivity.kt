@@ -27,7 +27,11 @@ class MainActivity : ComponentActivity() {
                         .background(color = Color(0xFF12323D))
                 ) { innerPadding ->
 
-                    Box(modifier = Modifier.padding(innerPadding)) {
+                    Box(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .background(color = Color(0xFF12323D))
+                    ) {
                         AppNavigationController()
                     }
                 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.tech.padawan.savemoneyslot.darken
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
 
 @Composable
@@ -34,7 +35,7 @@ fun TextWithBgColor(text: String, bgColor: Color = Color.Red, textColor: Color =
                 fontFamily = PixelifySans,
                 style = TextStyle(
                     shadow = Shadow(
-                        color = bgColor,
+                        color = bgColor.darken(),
                         offset = Offset(x = 2f, y = 2f),
                         blurRadius = 1f
                     )

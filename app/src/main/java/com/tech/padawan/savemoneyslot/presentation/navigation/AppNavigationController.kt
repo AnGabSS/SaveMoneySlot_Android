@@ -9,15 +9,14 @@ import com.tech.padawan.savemoneyslot.presentation.Home
 import com.tech.padawan.savemoneyslot.presentation.Intro
 import com.tech.padawan.savemoneyslot.presentation.Login
 import com.tech.padawan.savemoneyslot.presentation.components.SideNavMenu
+import com.tech.padawan.savemoneyslot.presentation.transaction.Transactions
 
-/**
- * Para um padrão mais moderno e seguro, definimos as rotas em uma "sealed class".
- * Isso evita erros de digitação nos nomes das rotas e as mantém organizadas.
- */
+
 sealed class Screen(val route: String) {
     object Intro : Screen("intro_screen")
     object Login : Screen("login_screen")
     object Home : Screen("home_screen")
+    object Transactions: Screen("transactions_screen")
 }
 
 @Composable
@@ -47,8 +46,14 @@ fun AppNavigationController() {
         }
 
         composable(route = Screen.Home.route) {
-            SideNavMenu {
+            SideNavMenu(screenName = "Home", navController = navController) {
                 Home(navController = navController)
+            }
+        }
+
+        composable( route = Screen.Transactions.route) {
+            SideNavMenu(screenName = "Transactions", navController = navController) {
+                Transactions(navController = navController)
             }
         }
     }

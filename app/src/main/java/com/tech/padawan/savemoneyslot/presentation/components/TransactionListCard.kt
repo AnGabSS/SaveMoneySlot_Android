@@ -14,10 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.tech.padawan.savemoneyslot.data.transaction.model.SearchedTransaction
+import com.tech.padawan.savemoneyslot.getColorByTransactionType
+import com.tech.padawan.savemoneyslot.parseDateToTime
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
+import java.text.NumberFormat
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
 
 @Composable
-fun TransactionListCard(text: String, value: String, color: Color = Color.Red) {
+fun TransactionListCard(transaction: SearchedTransaction) {
+    val color = getColorByTransactionType(transaction.type)
+
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
@@ -28,7 +38,7 @@ fun TransactionListCard(text: String, value: String, color: Color = Color.Red) {
     ) {
         Box(modifier = Modifier.weight(2f), contentAlignment = Alignment.CenterStart) {
             Text(
-                text = text,
+                text = transaction.name,
                 color = Color.White,
                 fontFamily = PixelifySans
             )
@@ -40,9 +50,17 @@ fun TransactionListCard(text: String, value: String, color: Color = Color.Red) {
 
         Box(modifier = Modifier.weight(2f), contentAlignment = Alignment.Center) {
             TextWithBgColor(
-                text = value,
+                text = NumberFormat.getCurrencyInstance().format(transaction.value),
                 modifier = Modifier.width(90.dp),
                 bgColor = color
+            )
+        }
+
+        Box(modifier = Modifier.weight(2f), contentAlignment = Alignment.CenterStart) {
+            Text(
+                text = parseDateToTime(transaction.date),
+                color = Color.White,
+                fontFamily = PixelifySans
             )
         }
     }

@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tech.padawan.savemoneyslot.R
+import com.tech.padawan.savemoneyslot.presentation.components.BackgroundForPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -113,7 +114,6 @@ fun Intro(onAnimationFinished: () -> Unit) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF12323D))
     ) {
         if (coinAlpha.value > 0f) {
             Image(
@@ -159,5 +159,7 @@ fun Intro(onAnimationFinished: () -> Unit) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun IntroPreview() {
-    Intro(onAnimationFinished = {})
+    BackgroundForPreview {
+        Intro(onAnimationFinished = {})
+    }
 }
