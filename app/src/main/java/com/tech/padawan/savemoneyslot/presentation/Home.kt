@@ -1,15 +1,25 @@
 package com.tech.padawan.savemoneyslot.presentation
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,32 +29,51 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.tech.padawan.savemoneyslot.R
 import com.tech.padawan.savemoneyslot.data.transaction.model.SearchedTransaction
 import com.tech.padawan.savemoneyslot.mocks.mockTransactions
 import com.tech.padawan.savemoneyslot.presentation.components.PieChartCard
 import com.tech.padawan.savemoneyslot.presentation.components.TextWithBgColor
 import com.tech.padawan.savemoneyslot.presentation.components.TransactionListCard
+import com.tech.padawan.savemoneyslot.presentation.navigation.Screen
+import com.tech.padawan.savemoneyslot.ui.theme.BlueBg
 import com.tech.padawan.savemoneyslot.ui.theme.PixelifySans
 import ir.ehsannarmani.compose_charts.ColumnChart
+import ir.ehsannarmani.compose_charts.RowChart
 import ir.ehsannarmani.compose_charts.models.BarProperties
 import ir.ehsannarmani.compose_charts.models.Bars
 import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.Pie
+import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
 import kotlin.random.Random
 
 @Composable
 fun Home(navController: NavHostController) {
 
     val lastTransaction: List<SearchedTransaction> = mockTransactions()
+    var expandedDatePeriodSelector by remember { mutableStateOf(false) }
+    var periodSelected by remember { mutableStateOf(12) }
+
+    fun getPeriodLabel(months: Int): String {
+        when(months){
+            3 -> return "3 Months"
+            6 -> return "6 Months"
+            12 -> return "1 Year"
+            else -> return "Invalid Period"
+        }
+
+    }
 
 
 
@@ -58,9 +87,15 @@ fun Home(navController: NavHostController) {
         )
     }
 
-    val linuxBrush = remember {
-        Brush.verticalGradient(
-            colors = listOf(Color(0xFFFFA500), Color.Yellow)
+    val positiveColorBar = remember {
+        Brush.horizontalGradient(
+            colors = listOf(Color(0xFF004701), Color.Green)
+        )
+    }
+
+    val negativeColorBar = remember {
+        Brush.horizontalGradient(
+            colors = listOf(Color(0xFF5E0000), Color.Red)
         )
     }
     val months = remember {
@@ -74,16 +109,14 @@ fun Home(navController: NavHostController) {
                 label = monthName,
                 values = listOf(
                     Bars.Data(
-                        label = "Linux",
+                        label = "Balance Per Month",
                         value = randomValue,
-                        color = linuxBrush
+                        color = if(randomValue >= 0) positiveColorBar else negativeColorBar
                     )
                 ),
             )
         }
     }
-
-    val scrollState = rememberScrollState()
 
 
 
@@ -98,19 +131,63 @@ fun Home(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize().padding(top = 60.dp)
         ) {
+            Box(contentAlignment = Alignment.TopCenter){
+                Button(
+                    onClick = { expandedDatePeriodSelector = !expandedDatePeriodSelector} ,
+                    shape = RoundedCornerShape(5.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White.copy(alpha = 0.5f)
+                    )
+                ) {
+                    Text(
+                        text = getPeriodLabel(periodSelected),
+                        fontFamily = PixelifySans,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Image(
+                        painter = painterResource(R.drawable.baseline_arrow_drop_down_24),
+                        contentDescription = "Coin image",
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                DropdownMenu(
+                    expanded = expandedDatePeriodSelector,
+                    onDismissRequest = { expandedDatePeriodSelector = false },
+                    modifier = Modifier.background(BlueBg).fillMaxWidth(),
+                    offset = DpOffset(1.dp, 1.dp)
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("3 Month") },
+                        onClick = {
+                            periodSelected = 3
+                            expandedDatePeriodSelector = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("6 Month") },
+                        onClick = {
+                            periodSelected = 6
+                            expandedDatePeriodSelector = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("1 Year") },
+                        onClick = {
+                            periodSelected = 12
+                            expandedDatePeriodSelector = false
+                        }
+                    )
+                }
+            }
             Box(
                 modifier = Modifier
-                .horizontalScroll(scrollState)
+                .fillMaxWidth()
             ){
-                val spacePerGroup = 42.dp
-                val totalWidth: Dp = remember(dynamicData) {
-                    spacePerGroup * dynamicData.size
-                }
-
-                ColumnChart(
+                RowChart(
                     modifier = Modifier
                         .height(250.dp)
-                        .width(totalWidth)
+                        .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     data = dynamicData,
                     barProperties = BarProperties(
@@ -118,7 +195,7 @@ fun Home(navController: NavHostController) {
                         spacing = 4.dp,
                         thickness = 10.dp
                     ),
-                    indicatorProperties = HorizontalIndicatorProperties(
+                    indicatorProperties = VerticalIndicatorProperties(
                         textStyle = TextStyle(
                             color = Color.White,
                             fontFamily = PixelifySans,
@@ -136,7 +213,7 @@ fun Home(navController: NavHostController) {
                         padding = 4.dp
                     ),
                     labelHelperProperties = LabelHelperProperties(
-                        enabled = true,
+                        enabled = false,
                         textStyle = TextStyle(
                             color = Color.White,
                             fontFamily = PixelifySans
